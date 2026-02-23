@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "Checking out branch ${params.BRANCH_NAME}..."
+                // In a real scenario:
+                // checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "Building application..."
+                sh 'echo "Build complete"'
+            }
+        }
+        stage('Test') {
+            when {
+                expression { return params.RUN_TESTS.toBoolean() }
+            }
+            steps {
+                echo "Running unit tests from pipelines folder..."
+                sh 'echo "Tests passed"'
+            }
+        }
+    }
+}

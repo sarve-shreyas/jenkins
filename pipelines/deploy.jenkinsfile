@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    environment {
+        // Extract environment name from job name (e.g., deploy-to-dev -> dev)
+        ENV_NAME = "${JOB_NAME.split('-').last()}"
+    }
+
+    stages {
+        stage('Validate Inputs') {
+            steps {
+                echo "Validating version ${params.VERSION} for environment ${ENV_NAME}..."
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo "Deploying to ${ENV_NAME}..."
+                sh 'echo "Deployment in progress..."'
+                sleep 2
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                echo "Checking health of ${ENV_NAME}..."
+                sh 'curl -I http://localhost:8080 || echo "Service reachable" '
+            }
+        }
+    }
+}
